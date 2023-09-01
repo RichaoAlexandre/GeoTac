@@ -1,22 +1,19 @@
-import React from 'react';
+import React,{ useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Carte from './pages/Carte';
+import CarteAdmin from './pages/CarteAdmin';
+import styles from './utils/style';
+import Accueil from './pages/Accueil';
+
 
 const App = () => {
+  const [username, setUsername] = useState(null);
   return (
-    
     <View style={styles.container}>
-       <Carte />
+      <Text style={styles.title}>GeoTacOPS</Text>
+      {username ? <CarteAdmin /> : <Accueil setUser={setUsername} />}
+       
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#F5FCFF",
-  }
-});
 
 export default App;

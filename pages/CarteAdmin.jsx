@@ -26,7 +26,7 @@ const circlePoints = (center, radius) => {
     return coordinates;
   };
 
-const Carte = () => {
+const CarteAdmin = () => {
 
     const [center, setCenter] = useState([2.294481, 48.858370]);
     const [radiusInMeters, setRadius] = useState(0);      // Initial value
@@ -141,4 +141,4 @@ const Carte = () => {
 };
 
 
-export default Carte;
+export default CarteAdmin;

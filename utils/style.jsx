@@ -28,7 +28,34 @@ const styles = StyleSheet.create({
         fontWeight: 'bold', 
         textAlign: 'center',
         marginVertical: 10,
-        }
+        },
+        label: {
+          fontSize: 18,
+          marginBottom: 10,
+      },
+      title2: {
+        fontSize: 30,       
+        fontWeight: 'bold', 
+        textAlign: 'center',
+        marginVertical: 10,
+        },
+        label: {
+          fontSize: 18,
+          marginBottom: 10,
+      },
+      input: {
+          borderWidth: 1,
+          borderColor: "#ddd",
+          padding: 10,
+          marginBottom: 15,
+          borderRadius: 5,
+      },
+      switchContainer: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 20,
+          justifyContent: 'space-between',
+      },
   });
 
 export default styles

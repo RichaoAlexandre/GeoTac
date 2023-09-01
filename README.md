@@ -1,4 +1,8 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+Pour savoir comment installer et tester une application android sur son ordinateur :
+
+https://www.youtube.com/watch?v=8ejuHsaXiwU&t=10s
+
+
 
 # Getting Started
 

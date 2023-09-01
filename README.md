@@ -2,6 +2,27 @@ Pour savoir comment installer et tester une application android sur son ordinate
 
 https://www.youtube.com/watch?v=8ejuHsaXiwU&t=10s
 
+Pour cloner le projet en local: 
+
+1) Installer git 
+2) Sur le terminal :
+
+`git clone https://github.com/your-username/your-repo-name.git`
+
+3) lorsque vous voulez développer une nouvelle feature: 
+
+`git checkout -b feature-branch-name`
+
+Puis pour add et commit le travail que vous avez effectué: 
+
+`git add .
+git commit -m "A descriptive message about the changes made"`
+
+Enfin pour pusher vos changements sur la branche que *vous* avez créé: 
+
+`git push origin feature-branch-name`
+
+4) Lorsque vous avez fini de développer une feature dite le moi je mergerais vos changements avec la branche principale du projet.
 
 
 # Getting Started

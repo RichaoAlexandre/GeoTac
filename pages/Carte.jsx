@@ -1,30 +1,44 @@
+import * as turf from '@turf/turf';
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
 import MapboxGL from "@rnmapbox/maps";
+import { View, Text, StyleSheet } from 'react-native';
+import { useState } from 'react';
 
 MapboxGL.setWellKnownTileServer('Mapbox'); // so you don't get the http ressourceurl error
 MapboxGL.setAccessToken("pk.eyJ1IjoibWF4dGFjMjA3NyIsImEiOiJjbG0waHE1bmIwN2pyM2pzNmUwZjM0MXg0In0.TSjPnJP4peh5CTxnKCrhKg");
 
 MapboxGL.setConnected(true);
 
+const circlePoints = (center, radius) => {
+    const coordinates = [];
+    const numberOfPoints = 360; // One point for each degree; can be adjusted for less/more granularity.
+  
+    for (let i = 0; i < numberOfPoints; i++) {
+      const angle = (i * 2 * Math.PI) / numberOfPoints;
+      const x = center[0] + radius * Math.cos(angle);
+      const y = center[1] + radius * Math.sin(angle);
+      coordinates.push([x*0.1, y]);
+    }
+  
+    return coordinates;
+  };
+
 const Carte = () => {
 
-    const center = [12.4924, 41.8902];
-    const radiusInMeters = 1000;      // 1 km
+    const center = [2.294481, 48.858370];
+    const radiusInMeters = 0.005;      // 1 km
 
-    const data = {
-    type: 'FeatureCollection',
-    features: [{
-        type: 'Feature',
-        properties: {
-        radius: radiusInMeters,
-        },
+    const coordinates = circlePoints(center,radiusInMeters)
+
+    const [polygon, setPolygon] = useState({
+        type: "Feature",
         geometry: {
-        type: 'Point',
-        coordinates: center,
+          type: "Polygon",
+          coordinates: [
+            coordinates,
+          ],
         },
-    }],
-    };
+      });
 
   return (
     
@@ -32,27 +46,18 @@ const Carte = () => {
        <Text style = {styles.title}>GeoTacOPS</Text>
        <View style={styles.mapContainer}>
        <MapboxGL.MapView style={styles.map}>
-       <MapboxGL.ShapeSource
-  id="circleSource"
-  shape={data}
->
-  <MapboxGL.CircleLayer
-    id="circleLayer"
-    style={{
-      circleRadius: [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        12, ['*', ['get', 'radius'], 0.005],   // Adjust multiplier as needed
-        15, ['*', ['get', 'radius'], 0.01],    // Adjust multiplier as needed
-        18, ['*', ['get', 'radius'], 0.02]     // Adjust multiplier as needed
-      ],
-      circleColor: 'rgba(255, 0, 0, 0.3)',
-      circleStrokeColor: 'red',
-      circleStrokeWidth: 2
-    }}
-  />
-</MapboxGL.ShapeSource>
+       <MapboxGL.Camera
+        centerCoordinate={center}
+        zoomLevel={13}
+      />
+        <MapboxGL.ShapeSource id="source" shape={polygon}>
+                <MapboxGL.FillLayer id="fill" style={{ fillColor: "red", fillOpacity:0.3}} />
+                <MapboxGL.LineLayer
+                    id="line"
+                    style={{ lineColor: "red", lineWidth: 2 }}
+                />
+        </MapboxGL.ShapeSource>
+
       </MapboxGL.MapView>
         </View>
       <Text>Hello, What is up this is so cool!</Text>

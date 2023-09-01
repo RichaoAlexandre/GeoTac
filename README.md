@@ -15,8 +15,8 @@ Pour cloner le projet en local:
 
 Puis pour add et commit le travail que vous avez effectué: 
 
-`git add .
-git commit -m "A descriptive message about the changes made"`
+`git add .`
+`git commit -m "A descriptive message about the changes made"`
 
 Enfin pour pusher vos changements sur la branche que *vous* avez créé: 
 

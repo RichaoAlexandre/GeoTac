@@ -3,6 +3,7 @@ import MapboxGL from "@rnmapbox/maps";
 import { View, Text, Button,Dimensions,TouchableOpacity  } from 'react-native';
 import Slider from '@react-native-community/slider'
 import { useState } from 'react';
+import UserGrid from '../components/UserGrid';
 
 import styles from '../utils/style';
 
@@ -120,7 +121,7 @@ const CarteAdmin = () => {
                 }
                 </MapboxGL.MapView>
             </View>
-            
+      
             {activeComponent == 1 && <View id="actionbuttons">
             {!createMode && <Button
                 title="Créer une zone"
@@ -160,7 +161,23 @@ const CarteAdmin = () => {
             )}
             </View>}
 
-            {activeComponent == 2 && <Text> Composant 2 </Text>}
+            {activeComponent == 2 && 
+              <UserGrid
+  data={[
+    { name: "John Doe", color: "red", role: "Admin" },
+    { name: "Jane Smith", color: "blue", role: "User" },
+    { name: "John Doe", color: "red", role: "Admin" },
+    { name: "Jane Smith", color: "blue", role: "User" },
+    { name: "John Doe", color: "red", role: "Admin" },
+    { name: "Jane Smith", color: "blue", role: "User" },
+    { name: "John Doe", color: "red", role: "Admin" },
+    { name: "Jane Smith", color: "blue", role: "User" },
+    { name: "John Doe", color: "red", role: "Admin" },
+    { name: "Jane Smith", color: "blue", role: "User" },
+  ]}
+/>
+                                        }
+
             <View style={styles.content}>
               <Text> </Text>
           <View style={styles.bottomBar}>

@@ -121,7 +121,7 @@ const CarteAdmin = () => {
                 </MapboxGL.MapView>
             </View>
             
-            <View id="actionbuttons">
+            {activeComponent == 1 && <View id="actionbuttons">
             {!createMode && <Button
                 title="Créer une zone"
                 onPress={() => {
@@ -158,20 +158,17 @@ const CarteAdmin = () => {
             
             </View>
             )}
-            </View>
+            </View>}
+
+            {activeComponent == 2 && <Text> Composant 2 </Text>}
             <View style={styles.content}>
-            <View>
-        <DisplayedComponent />
-          </View>
+              <Text> </Text>
           <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.button} onPress={() => setActiveComponent(1)}>
-          <Text>Comp 1</Text>
+          <Text>Commandes</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => setActiveComponent(2)}>
-          <Text>Comp 2</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => setActiveComponent(3)}>
-          <Text>Comp 3</Text>
+          <Text>Equipiers</Text>
         </TouchableOpacity>
       </View>
             </View>

@@ -12,6 +12,15 @@ MapboxGL.setAccessToken("pk.eyJ1IjoibWF4dGFjMjA3NyIsImEiOiJjbG0waHE1bmIwN2pyM2pz
 
 MapboxGL.setConnected(true);
 
+const colors = [
+  { name: 'Red', value: '#FF0000' },
+  { name: 'Blue', value: '#0000FF' },
+  { name: 'Green', value: '#00FF00' },
+  { name: 'Orange', value: '#FFA500' },
+  { name: 'Violet', value: '#EE82EE' },
+  { name: 'Yellow', value: '#FFFF00' },
+];
+
 const Component1 = () => <Text>Component 1</Text>;
 const Component2 = () => <Text>Component 2</Text>;
 const Component3 = () => <Text>Component 3</Text>;
@@ -42,6 +51,7 @@ const CarteAdmin = () => {
     const [circleCenter, setCircleCenter] = useState(center);
     const [zoomLevel, setZoomLevel] = useState(13); 
     const [displayedZones, setDisplayedZones] = useState([]);
+    const [selectedColor, setSelectedColor] = useState(colors[0].value);
 
     const coordinates = circlePoints(center,radiusInMeters)
 
@@ -79,6 +89,14 @@ const CarteAdmin = () => {
         });
     };
 
+      const interpolateColor = (value) => {
+        // This function will interpolate between red and blue based on value
+        const red = Math.floor(255 * (1 - value));
+        const blue = Math.floor(255 * value);
+    
+        return `rgb(${red}, 0, ${blue})`;
+    };
+
       const handleSliderChange = (value) => {
         setRadius(value);
         updateCircle(circleCenter, value);
@@ -107,18 +125,18 @@ const CarteAdmin = () => {
                     {createMode && (<View>
                     
                     <MapboxGL.ShapeSource id="source" shape={polygon}>
-                        <MapboxGL.FillLayer id="fill" style={{ fillColor: "red", fillOpacity: 0.3 }} />
+                        <MapboxGL.FillLayer id="fill" style={{ fillColor: selectedColor, fillOpacity: 0.3 }} />
                         <MapboxGL.LineLayer id="line" style={{ lineColor: "black", lineWidth: 2 }} />
                     </MapboxGL.ShapeSource>
                     </View>)}
-                   {
-                    displayedZones.map((zone, index) => (
-                        <MapboxGL.ShapeSource key={index} id={`source-${index}`} shape={zone}>
-                            <MapboxGL.FillLayer id={`fill-${index}`} style={{ fillColor: "red", fillOpacity: 0.3 }} />
-                            <MapboxGL.LineLayer id={`line-${index}`} style={{ lineColor: "black", lineWidth: 2 }} />
-                        </MapboxGL.ShapeSource>
-                    ))
-                }
+                    {
+                        displayedZones.map((zone, index) => (
+                            <MapboxGL.ShapeSource key={index} id={`source-${index}`} shape={zone.polygon}>
+                                <MapboxGL.FillLayer id={`fill-${index}`} style={{ fillColor: zone.color, fillOpacity: 0.3 }} />
+                                <MapboxGL.LineLayer id={`line-${index}`} style={{ lineColor: "black", lineWidth: 2 }} />
+                            </MapboxGL.ShapeSource>
+                        ))
+                    }
                 </MapboxGL.MapView>
             </View>
       
@@ -141,10 +159,27 @@ const CarteAdmin = () => {
                 minimumTrackTintColor="#1FB6FF"  // Blue-ish color for the selected part
                 maximumTrackTintColor="#d3d3d3"  // Grey color for the unselected part
             />
+            <Text style = {styles.text}>Choisissez la couleur de la zone</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginVertical: 10 }}>
+              {colors.map((color, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    backgroundColor: color.value,
+                    width: 40,
+                    height: 40,
+                    margin: 5,
+                    borderWidth: selectedColor === color.value ? 2 : 0,
+                    borderColor: '#000'
+                  }}
+                  onPress={() => setSelectedColor(color.value)}
+                />
+              ))}
+            </View>
             <Button
                 title="Terminé"
                 onPress={() => {
-                  setDisplayedZones(prevZones => [...prevZones, polygon]);
+                  setDisplayedZones(prevZones => [...prevZones, { polygon: polygon, color: selectedColor }]);
                   setCreateMode(false);
                   setRadius(0)
               }}

@@ -20,9 +20,9 @@ const styles = StyleSheet.create({
       ...StyleSheet.absoluteFillObject,  
     },
     text: {
-      fontSize: 20,        
+      fontSize: 15,        
       textAlign: 'center',
-      marginVertical: 10,
+      marginVertical: 2,
     },
     title: {
         fontSize: 40,       

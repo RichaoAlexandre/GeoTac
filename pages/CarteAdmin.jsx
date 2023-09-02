@@ -1,9 +1,8 @@
 import React from 'react';
 import MapboxGL from "@rnmapbox/maps";
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button,Dimensions,TouchableOpacity  } from 'react-native';
 import Slider from '@react-native-community/slider'
 import { useState } from 'react';
-import { Dimensions } from 'react-native';
 
 import styles from '../utils/style';
 
@@ -11,6 +10,10 @@ MapboxGL.setWellKnownTileServer('Mapbox'); // so you don't get the http ressourc
 MapboxGL.setAccessToken("pk.eyJ1IjoibWF4dGFjMjA3NyIsImEiOiJjbG0waHE1bmIwN2pyM2pzNmUwZjM0MXg0In0.TSjPnJP4peh5CTxnKCrhKg");
 
 MapboxGL.setConnected(true);
+
+const Component1 = () => <Text>Component 1</Text>;
+const Component2 = () => <Text>Component 2</Text>;
+const Component3 = () => <Text>Component 3</Text>;
 
 const circlePoints = (center, radius) => {
     const coordinates = [];
@@ -28,6 +31,10 @@ const circlePoints = (center, radius) => {
 
 const CarteAdmin = () => {
 
+    
+
+    
+    const [activeComponent, setActiveComponent] = useState(1);
     const [center, setCenter] = useState([2.294481, 48.858370]);
     const [radiusInMeters, setRadius] = useState(0);      // Initial value
     const [createMode, setCreateMode] = useState(false);
@@ -36,6 +43,19 @@ const CarteAdmin = () => {
     const [displayedZones, setDisplayedZones] = useState([]);
 
     const coordinates = circlePoints(center,radiusInMeters)
+
+    let DisplayedComponent;
+    switch (activeComponent) {
+      case 1:
+        DisplayedComponent = Component1;
+        break;
+      case 2:
+        DisplayedComponent = Component2;
+        break;
+      case 3:
+        DisplayedComponent = Component3;
+        break;
+    }
 
     const [polygon, setPolygon] = useState({
         type: "Feature",
@@ -100,6 +120,8 @@ const CarteAdmin = () => {
                 }
                 </MapboxGL.MapView>
             </View>
+            
+            <View id="actionbuttons">
             {!createMode && <Button
                 title="Créer une zone"
                 onPress={() => {
@@ -133,9 +155,27 @@ const CarteAdmin = () => {
                   setRadius(0)
               }}
             />
+            
             </View>
             )}
-            <Text>Hello, What is up this is so cool!</Text>
+            </View>
+            <View style={styles.content}>
+            <View>
+        <DisplayedComponent />
+          </View>
+          <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.button} onPress={() => setActiveComponent(1)}>
+          <Text>Comp 1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => setActiveComponent(2)}>
+          <Text>Comp 2</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => setActiveComponent(3)}>
+          <Text>Comp 3</Text>
+        </TouchableOpacity>
+      </View>
+            </View>
+          
         </View>
   );
 };

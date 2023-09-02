@@ -1,10 +1,11 @@
 import React from 'react';
 import MapboxGL from "@rnmapbox/maps";
-import { View, Text, Button,Dimensions,TouchableOpacity  } from 'react-native';
+import { View, Text, Button,Dimensions,TouchableOpacity,PermissionsAndroid, SafeAreaView  } from 'react-native';
 import Slider from '@react-native-community/slider'
-import { useState } from 'react';
-import UserGrid from '../components/UserGrid';
+import { useState, useEffect } from 'react';
 
+
+import UserGrid from '../components/UserGrid';
 import styles from '../utils/style';
 
 MapboxGL.setWellKnownTileServer('Mapbox'); // so you don't get the http ressourceurl error
@@ -41,21 +42,46 @@ const circlePoints = (center, radius) => {
 
 const CarteAdmin = () => {
 
-    
-
-    
     const [activeComponent, setActiveComponent] = useState(1);
-    const [center, setCenter] = useState([2.294481, 48.858370]);
     const [radiusInMeters, setRadius] = useState(0);      // Initial value
     const [createMode, setCreateMode] = useState(false);
     const [circleCenter, setCircleCenter] = useState(center);
     const [zoomLevel, setZoomLevel] = useState(13); 
     const [displayedZones, setDisplayedZones] = useState([]);
     const [selectedColor, setSelectedColor] = useState(colors[0].value);
+    const [hasLocationPermissions,sethasLocationPermissions] = useState(false)
+    const [userLocation, setUserLocation] = useState(null)
+    const [center, setCenter] = useState([2.294481, 48.858370]);
 
     const coordinates = circlePoints(center,radiusInMeters)
 
-    let DisplayedComponent;
+    
+
+    const requestLocationPermission = async  () => 
+    {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          sethasLocationPermissions(true)
+          console.log("You can use the location")
+          alert("You can use the location");
+        } else {
+          console.log("location permission denied")
+          alert("Location permission denied");
+        }
+      } catch (err) {
+        console.warn(err)
+      }
+    }
+  
+    useEffect(()=>{
+        requestLocationPermission()
+    },[])
+  
+
     switch (activeComponent) {
       case 1:
         DisplayedComponent = Component1;
@@ -137,6 +163,21 @@ const CarteAdmin = () => {
                             </MapboxGL.ShapeSource>
                         ))
                     }
+                    
+                <MapboxGL.UserLocation
+                    visible={true}
+                    androidRenderMode={'compass'}
+                    showsUserHeadingIndicator={true}
+                    onUpdate={newLocation => {
+                      console.log(newLocation)
+                      if(!userLocation){
+                        setUserLocation(true)
+                        console.log(newLocation.coords.latitude)
+                        console.log(newLocation.coords.longitude)
+                        setCenter([newLocation.coords.longitude, newLocation.coords.latitude])
+                      }
+                    }}
+                />
                 </MapboxGL.MapView>
             </View>
       

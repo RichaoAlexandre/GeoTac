@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {Dimensions } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
@@ -19,9 +20,9 @@ const styles = StyleSheet.create({
       ...StyleSheet.absoluteFillObject,  
     },
     text: {
-      fontSize: 20,        
+      fontSize: 15,        
       textAlign: 'center',
-      marginVertical: 10,
+      marginVertical: 2,
     },
     title: {
         fontSize: 40,       
@@ -56,6 +57,26 @@ const styles = StyleSheet.create({
           marginBottom: 20,
           justifyContent: 'space-between',
       },
+      content: {
+        flex: 1,
+        justifyContent: 'space-between',
+        position: 'relative',
+      },
+      bottomBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: Dimensions.get('window').width,  // Full width  // Set position to absolute
+        bottom: 0,
+        position: 'relative',  // Set position to absolute
+      },
+      button: {
+        flex: 1,  // Divide the width by 3
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 15,  // Adjust as needed
+        borderTopWidth: 1,    // Optional: add border if you want
+        borderColor: '#d1d1d1' // Optional: add border color if you want
+      }
   });
 
 export default styles

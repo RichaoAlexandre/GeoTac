@@ -238,7 +238,7 @@ const CarteAdmin = () => {
             />
             
             </View>
-            ) : <Text> Hello World </Text>)}
+            ) : <Text style={styles.title2}> Selectionnez une zone sur la carte</Text>)}
             </View>}
 
             {activeComponent == 2 && 

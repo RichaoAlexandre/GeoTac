@@ -52,6 +52,7 @@ const CarteAdmin = () => {
     const [hasLocationPermissions,sethasLocationPermissions] = useState(false)
     const [userLocation, setUserLocation] = useState(null)
     const [center, setCenter] = useState([2.294481, 48.858370]);
+    const [areaPlaced, setPlaced] = useState(false)
 
     const coordinates = circlePoints(center,radiusInMeters)
 
@@ -67,7 +68,6 @@ const CarteAdmin = () => {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           sethasLocationPermissions(true)
           console.log("You can use the location")
-          alert("You can use the location");
         } else {
           console.log("location permission denied")
           alert("Location permission denied");
@@ -144,6 +144,7 @@ const CarteAdmin = () => {
                           setCircleCenter(lngLat);
                           updateCircle(lngLat, radiusInMeters);
                           setCenter(lngLat); // Set the center to where the user touched
+                          setPlaced(true)
                       }
                     }}
                 >
@@ -186,9 +187,10 @@ const CarteAdmin = () => {
                 title="Créer une zone"
                 onPress={() => {
                   setCreateMode(true)
-                  setRadius(0.001)}}
+                  setRadius(0.001)
+                  }}
             />}
-            {createMode && (<View>
+            {createMode && (areaPlaced ? (<View>
               <Text style = {styles.text}>Ajustez la taille de la zone</Text>
                 <Slider
                 style={{ width: screenWidth, height: 40 }}
@@ -223,6 +225,7 @@ const CarteAdmin = () => {
                   setDisplayedZones(prevZones => [...prevZones, { polygon: polygon, color: selectedColor }]);
                   setCreateMode(false);
                   setRadius(0)
+                  setPlaced(false)
               }}
             />
             <Button
@@ -230,11 +233,12 @@ const CarteAdmin = () => {
                 onPress={() => {
                   setCreateMode(false);
                   setRadius(0)
+                  setPlaced(false)
               }}
             />
             
             </View>
-            )}
+            ) : <Text> Hello World </Text>)}
             </View>}
 
             {activeComponent == 2 && 

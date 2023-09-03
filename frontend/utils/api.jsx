@@ -1,11 +1,13 @@
 import React from 'react';
 
-async function connectToServer(username) {
+async function connectToServer(username,isAdmin,serverAction,serverNumber=28) {
     const apiUrl = 'https://w8giil48z7.execute-api.eu-west-3.amazonaws.com/staging/lamdba'; // Replace with your API Gateway URL
     console.log("request se")
     const payload = {
-      action: 'launch',
+      action: serverAction,
       username: username,
+      isAdmin: isAdmin,
+      serverId: serverNumber
     };
   
     try {

@@ -18,16 +18,50 @@ def lambda_handler(event, context):
     except Exception as e:
         print(e)
     print("connected !")
+    print(body)
 
     if(action == 'launch'):
         username = body['username']
+        isAdmin = body['isAdmin']
         server_id = random.randint(10000,99999)
         table.put_item(
         Item={
             'username': username, 
-            'serverId': server_id #implémenter comme étant le numéro de serveur
+            'serverId': server_id, #implémenter comme étant le numéro de serveur
+            'longitudes' : [],
+            'latitudes' : [],
+            "isAdmin": isAdmin
+        }
+        )
+        return ({'statusCode': 200,
+                'body': json.dumps({
+                'message': f'le numéro du serveur est {server_id}',
+                'status': True})})
+
+    elif(action == 'join'):
+        isAdmin = body['isAdmin']
+        username = body['username']
+        server_id = body['serverId']
+        response = table.scan(
+            FilterExpression=boto3.dynamodb.conditions.Attr('serverId').eq(server_id)
+        )
+        if not response['Items']:
+            raise Exception("Ce serveur n'existe pas")
+  
+        table.put_item(
+        Item={
+            'username': username, 
+            'serverId': server_id, #implémenter comme étant le numéro de serveur
+            'longitudes' : [],
+            'latitudes' : [],
+            "isAdmin": isAdmin
         }
     )
+        return ({'statusCode': 200,
+                'body': json.dumps({
+                'message': 'Connected.',
+                'status': True})})
+        
     elif(action == 'disconnect'):
         username = body['username']
         table.delete_item(

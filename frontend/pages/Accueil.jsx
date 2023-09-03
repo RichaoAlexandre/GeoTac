@@ -14,12 +14,8 @@ const Accueil = (props) => {
     const handleRegister = () => {
         setRegistered(true);
         props.setUser(username);
-        if (serverAction === 'launch') {
-            connectToServer(username)
-            Alert.alert("Succès", `Lancement du serveur par ${username}!`);
-        } else {
-            Alert.alert("Succès", `${username} a rejoint le serveur ${serverNumber}`);
-        }
+        connectToServer(username,isAdmin,serverAction,serverNumber)
+        
     };
 
     return (

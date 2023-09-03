@@ -40,8 +40,8 @@ provider:
         - dynamodb:GetItem
         - dynamodb:Query
         - dynamodb:DeleteItem
+        - dynamodb:Scan 
       Resource:
-        - arn:aws:dynamodb:${self:provider.region}:*:table/ConnectionsTable
         - arn:aws:dynamodb:${self:provider.region}:*:table/LocationData
 
 custom:

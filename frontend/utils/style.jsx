@@ -2,6 +2,29 @@ import {StyleSheet} from 'react-native';
 import {Dimensions } from 'react-native';
 
 const styles = StyleSheet.create({
+  segmentedControl: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    overflow: 'hidden'
+  },
+  segment: {
+    flex: 1,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  activeSegment: {
+    backgroundColor: '#81b0ff'
+  },
+  inactiveText: {
+    color: '#000'
+  },
+  activeText: {
+    color: '#fff'
+  },
     container: {
       flex: 1,
       alignItems: "center",

@@ -41,8 +41,10 @@ provider:
         - dynamodb:Query
         - dynamodb:DeleteItem
         - dynamodb:Scan 
+        - dynamodb:UpdateItem
       Resource:
         - arn:aws:dynamodb:${self:provider.region}:*:table/LocationData
+        - arn:aws:dynamodb:${self:provider.region}:*:table/serverdata
 
 custom:
   pythonRequirements:

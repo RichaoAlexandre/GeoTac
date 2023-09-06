@@ -7,6 +7,23 @@ except ImportError:
 import boto3
 import json
 import random
+from decimal import Decimal
+
+
+def convert_floats_to_decimal(obj):
+    """Recursively convert all float values in the given object to Decimal."""
+    if isinstance(obj, list):
+        for i in range(len(obj)):
+            obj[i] = convert_floats_to_decimal(obj[i])
+        return obj
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            obj[k] = convert_floats_to_decimal(v)
+        return obj
+    if isinstance(obj, float):
+        return Decimal(str(obj))
+    return obj
+
 
 dynamodb = boto3.resource('dynamodb')
 
@@ -14,7 +31,7 @@ def lambda_handler(event, context):
     body = json.loads(event['body'])
     action = body['action']
     try:
-        table = dynamodb.Table('LocationData')
+        table = dynamodb.Table('serverdata')
     except Exception as e:
         print(e)
     print("connected !")
@@ -26,41 +43,120 @@ def lambda_handler(event, context):
         server_id = random.randint(10000,99999)
         table.put_item(
         Item={
-            'username': username, 
-            'serverId': server_id, #implémenter comme étant le numéro de serveur
-            'longitudes' : [],
-            'latitudes' : [],
-            "isAdmin": isAdmin
+            'username': [username], 
+            'serverid': server_id, #implémenter comme étant le numéro de serveur
+            'positions' : [],
+            'circles' : [],
+            "isAdmin": [isAdmin]
         }
         )
         return ({'statusCode': 200,
                 'body': json.dumps({
-                'message': f'le numéro du serveur est {server_id}',
+                'message': server_id,
                 'status': True})})
 
-    elif(action == 'join'):
+    elif action == 'join':
         isAdmin = body['isAdmin']
         username = body['username']
-        server_id = body['serverId']
-        response = table.scan(
-            FilterExpression=boto3.dynamodb.conditions.Attr('serverId').eq(server_id)
+        server_id = int(body['serverId'])  # Ensure server_id is a string
+
+        response = table.get_item(
+            Key={'serverid': server_id},
+            AttributesToGet=['isAdmin', 'username', 'circles', 'positions']
         )
-        if not response['Items']:
-            raise Exception("Ce serveur n'existe pas")
-  
-        table.put_item(
-        Item={
-            'username': username, 
-            'serverId': server_id, #implémenter comme étant le numéro de serveur
-            'longitudes' : [],
-            'latitudes' : [],
-            "isAdmin": isAdmin
-        }
-    )
+
+        item = response.get('Item', {})
+
+        # Extracting or initializing the lists
+        listisAdmin = item.get('isAdmin', [])
+        listusername = item.get('username', [])
+        circles = item.get('circles', [])
+        positions = item.get('positions', [])
+
+        # Appending new values
+        listisAdmin.append(isAdmin)
+        listusername.append(username)
+
+        # Updating the item with updated lists
+        table.update_item(
+            Key={'serverid': server_id},
+            UpdateExpression="SET username = :u, circles = :c, positions = :p, isAdmin = :a",
+            ExpressionAttributeValues={
+                ':u': listusername,
+                ':c': circles,
+                ':p': positions,
+                ':a': listisAdmin
+            }
+        )
+
         return ({'statusCode': 200,
                 'body': json.dumps({
-                'message': 'Connected.',
+                'message': server_id,
                 'status': True})})
+        
+    elif(action == 'sendCircle'):
+        serverid = int(body['serverId'])
+        coordinates = body['coordinates']
+       
+        response = table.get_item(
+            Key={'serverid': serverid},
+            AttributesToGet=['isAdmin', 'username', 'circles', 'positions']
+        )
+
+        item = response.get('Item', {})
+
+        # Extracting or initializing the lists
+        listisAdmin = item.get('isAdmin', [])
+        listusername = item.get('username', [])
+        circles = item.get('circles', [])
+        positions = item.get('positions', [])
+
+        # Appending new values
+        circles.append(convert_floats_to_decimal(coordinates))
+
+        # Updating the item with updated lists
+        table.update_item(
+            Key={'serverid': serverid},
+            UpdateExpression="SET username = :u, circles = :c, positions = :p, isAdmin = :a",
+            ExpressionAttributeValues={
+                ':u': listusername,
+                ':c': circles,
+                ':p': positions,
+                ':a': listisAdmin
+            }
+        )
+
+    elif(action == 'sendPosition'):
+        serverid = int(body['serverId'])
+        coordinates = body['coordinates']
+       
+        response = table.get_item(
+            Key={'serverid': serverid},
+            AttributesToGet=['isAdmin', 'username', 'circles', 'positions']
+        )
+
+        item = response.get('Item', {})
+
+        # Extracting or initializing the lists
+        listisAdmin = item.get('isAdmin', [])
+        listusername = item.get('username', [])
+        circles = item.get('circles', [])
+        positions = item.get('positions', [])
+
+        # Appending new values
+        positions.append(convert_floats_to_decimal(coordinates))
+
+        # Updating the item with updated lists
+        table.update_item(
+            Key={'serverid': serverid},
+            UpdateExpression="SET username = :u, circles = :c, positions = :p, isAdmin = :a",
+            ExpressionAttributeValues={
+                ':u': listusername,
+                ':c': circles,
+                ':p': positions,
+                ':a': listisAdmin
+            }
+        )
         
     elif(action == 'disconnect'):
         username = body['username']
